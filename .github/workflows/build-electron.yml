@@ -1,0 +1,26 @@
+name: Build, Make and Publish Client
+
+on:
+  push:
+    branches:
+      - develop
+      - stage
+      - master
+
+  pull_request:
+    branches:
+      - develop
+      - stage
+      - master
+
+env:
+  NODE_VERSION: '18.x'
+
+jobs:
+  build:
+    name: Build Electron App
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
