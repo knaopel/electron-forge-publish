@@ -52,6 +52,7 @@ jobs:
         uses: borales/actions-yarn@v5
         with:
           cmd: make
+          dir: app
 
       - name: Create Release
         id: create-release
