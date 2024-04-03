@@ -15,12 +15,16 @@ on:
 
   workflow_dispatch:
 
+concurrency:
+  group: build-and-publish-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   NODE_VERSION: '18.x'
 
 jobs:
-  build:
-    name: Build Electron App
+  make:
+    name: Make Electron App
     runs-on: windows-latest
     environment: ${{ github.ref_name == 'master' && 'production' || github.ref_name == 'stage' && 'staging' || 'development' }}
 
@@ -44,10 +48,35 @@ jobs:
           cmd: install
           dir: app
 
-      - name: Upload artifact for make job
-        uses: actions/upload-artifact@v3
+      - name: Make Electron App
+        uses: borales/actions-yarn@v5
         with:
-          name: electron-app
-          path: app
-          if-no-files-found: error
+          cmd: make
+
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          prerelease: ${{ github.ref_name != 'master' }}
+
+      - name: Upload Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: 'app/out/make/squirrel.windows/x64/some-ts-electron-app-1.0.0 Setup.exe'
+          asset_name: 'some-ts-electron-app-1.0.0 Setup.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Publish Release
+        uses: eregon/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ steps.create-release.outputs.id }}
       
