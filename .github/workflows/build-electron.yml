@@ -13,6 +13,8 @@ on:
       - stage
       - master
 
+  workflow_dispatch:
+
 env:
   NODE_VERSION: '18.x'
 
@@ -20,7 +22,32 @@ jobs:
   build:
     name: Build Electron App
     runs-on: windows-latest
+    environment: ${{ github.ref_name == 'master' && 'production' || github.ref_name == 'stage' && 'staging' || 'development' }}
 
     steps:
       - name: Check out git repository
         uses: actions/checkout@v4
+
+      - name: Setup Node, NPM and Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Set Yarn timeout
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: config set network-timeout 300000
+
+      - name: Install dependencies
+        uses: borales/actions-yarn@v5
+        with:
+          cmd: install
+          dir: app
+
+      - name: Upload artifact for make job
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-app
+          path: app
+          if-no-files-found: error
+      
