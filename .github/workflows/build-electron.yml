@@ -76,6 +76,7 @@ jobs:
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
+        if: ${{ github.event_name == 'push' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
