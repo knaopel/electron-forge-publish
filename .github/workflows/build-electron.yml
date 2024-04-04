@@ -33,6 +33,17 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@v4
 
+      - name: Read package.json file
+        uses: rexdefuror/read-package-json@v1.0.5
+        with:
+          path: app
+
+      - name: Tag repo
+        shell: pwsh
+        run: |
+          git tag v${{ env.PACKAGE_VERSION }}
+          git push --tags
+
       - name: Setup Node, NPM and Yarn
         uses: actions/setup-node@v4
         with:
@@ -55,10 +66,6 @@ jobs:
           cmd: make
           dir: app
 
-      # - name: Read package.json file
-      #   uses: rexdefuror/read-package-json@v1.0.5
-      #   with:
-      #     path: app
 
       # - name: Run tests
       #   shell: pwsh
@@ -84,7 +91,7 @@ jobs:
             app/package.json
 
   release:
-    name: Tag and Release Electon App
+    name: Release Electon App
     needs: make
     runs-on: ubuntu-latest
     # if: ${{ github.ref_type == 'tag' }}
@@ -97,19 +104,19 @@ jobs:
       - name: Show contents of download
         run: ls -R
 
-      - name: Read package.json file
-        uses: rexdefuror/read-package-json@v1.0.5
+      # - name: Read package.json file
+      #   uses: rexdefuror/read-package-json@v1.0.5
 
-      - name: Show package values
-        run: |
-          echo PACKAGE_NAME=${{ env.PACKAGE_NAME }}
-          echo PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
-          echo PACKAGE_PRODUCT_NAME=${{ env.PACKAGE_PRODUCT_NAME }}
+      # - name: Show package values
+      #   run: |
+      #     echo PACKAGE_NAME=${{ env.PACKAGE_NAME }}
+      #     echo PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
+      #     echo PACKAGE_PRODUCT_NAME=${{ env.PACKAGE_PRODUCT_NAME }}
 
-      - name: Tag Electron App
-        run: |
-          git tag v${{ env.PACKAGE_VERSION }}
-          git push --tags
+      # - name: Tag Electron App
+      #   run: |
+      #     git tag v${{ env.PACKAGE_VERSION }}
+      #     git push --tags
 
       - name: Release Electron App
         uses: softprops/action-gh-release@v2
