@@ -6,7 +6,7 @@ on:
       - develop
       - stage
       - master
-    tags: 'v*'
+    # tags: 'v*'
 
   # pull_request:
   #   branches:
@@ -27,7 +27,7 @@ jobs:
   make:
     name: Make Electron App
     runs-on: windows-latest
-    # environment: ${{ github.ref_name == 'master' && 'production' || github.ref_name == 'stage' && 'staging' || 'development' }}
+    environment: ${{ github.ref_name == 'master' && 'production' || github.ref_name == 'stage' && 'staging' || 'development' }}
 
     steps:
       - name: Check out git repository
@@ -83,9 +83,8 @@ jobs:
             app/out/make/squirrel.windows/x64/
             app/package.json
 
-  
   release:
-    name: Release Electon App
+    name: Tag and Release Electon App
     needs: make
     runs-on: ubuntu-latest
     # if: ${{ github.ref_type == 'tag' }}
@@ -107,19 +106,27 @@ jobs:
           echo PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
           echo PACKAGE_PRODUCTNAME=${{ env.PACKAGE_PRODUCTNAME }}
 
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
-        if: ${{ github.ref_type == 'tag' }}
+      - name: Tag and Release Electron App
+        uses: avakar/tag-and-release@v1
+        with:
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          prerelease: ${{ github.ref_name != 'master' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
-          TAG_NAME: ${{ github.ref_name }}
-        with:
-          tag_name: ${{ env.TAG_NAME }}
-          release_name: Release ${{ env.TAG_NAME }}
-          prerelease: true
-          body: 'some test body'
+
+      # - name: Create Release
+      #   id: create-release
+      #   uses: actions/create-release@v1
+      #   if: ${{ github.ref_type == 'tag' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
+      #     TAG_NAME: ${{ github.ref_name }}
+      #   with:
+      #     tag_name: ${{ env.TAG_NAME }}
+      #     release_name: Release ${{ env.TAG_NAME }}
+      #     prerelease: true
+      #     body: 'some test body'
 
       # - name: Upload Release
       #   uses: actions/upload-release-asset@v1
@@ -137,4 +144,3 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #   with:
       #     release_id: ${{ steps.create-release.outputs.id }}
-
