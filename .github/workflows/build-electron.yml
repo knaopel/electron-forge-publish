@@ -66,21 +66,25 @@ jobs:
         run: |
           echo $ENV:PACKAGE_NAME
           echo $ENV:RELEASE_BINARY
+          echo ${{ github.event_name }}
           ls app/out
           ls app/out/make
           ls app/out/make/squirrel.windows
           ls app/out/make/squirrel.windows/x64
 
 
-      # - name: Create Release
-      #   id: create-release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     prerelease: ${{ github.ref_name != 'master' }}
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        if: ${{ github.event_name == 'push' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
+        with:
+          tag_name: v0.0.9
+          release_name: Release v0.0.9
+          prerelease: true
+          body: 'some test'
 
       # - name: Upload Release
       #   uses: actions/upload-release-asset@v1
