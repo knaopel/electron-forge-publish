@@ -104,8 +104,8 @@ jobs:
       - name: Show contents of download
         run: ls -R
 
-      # - name: Read package.json file
-      #   uses: rexdefuror/read-package-json@v1.0.5
+      - name: Read package.json file
+        uses: rexdefuror/read-package-json@v1.0.5
 
       # - name: Show package values
       #   run: |
@@ -120,10 +120,12 @@ jobs:
 
       - name: Release Electron App
         uses: softprops/action-gh-release@v2
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: out/make/squirrel.windows/x64/
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          name: Release v${{ env.PACKAGE_VERSION }}
           prerelease: ${{ github.ref_name != 'master' }}
 
       # - name: Publish Release
