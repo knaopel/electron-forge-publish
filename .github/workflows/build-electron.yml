@@ -66,25 +66,34 @@ jobs:
         run: |
           echo $ENV:PACKAGE_NAME
           echo $ENV:RELEASE_BINARY
-          echo ${{ github.event_name }}
+          echo event_name ${{ github.event_name }}
+          echo ref_type ${{ github.ref_type }}
           ls app/out
           ls app/out/make
           ls app/out/make/squirrel.windows
           ls app/out/make/squirrel.windows/x64
 
-
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
-        if: ${{ github.event_name == 'push' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
+      - name: Upload Artifacts
+        id: upload-artifacts
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: v0.0.9
-          release_name: Release v0.0.9
-          prerelease: true
-          body: 'some test'
+          name: electron-app
+          path: app/out/make/squirrel.windows/x64/
+
+
+
+      # - name: Create Release
+      #   id: create-release
+      #   uses: actions/create-release@v1
+      #   if: ${{ github.ref_type == 'tag' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
+      #   with:
+      #     tag_name: v0.0.9
+      #     release_name: Release v0.0.9
+      #     prerelease: true
+      #     body: 'some test'
 
       # - name: Upload Release
       #   uses: actions/upload-release-asset@v1
