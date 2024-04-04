@@ -104,39 +104,20 @@ jobs:
         run: |
           echo PACKAGE_NAME=${{ env.PACKAGE_NAME }}
           echo PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
-          echo PACKAGE_PRODUCTNAME=${{ env.PACKAGE_PRODUCTNAME }}
+          echo PACKAGE_PRODUCT_NAME=${{ env.PACKAGE_PRODUCT_NAME }}
 
-      - name: Tag and Release Electron App
-        uses: avakar/tag-and-release@v1
+      - name: Tag Electron App
+        run: |
+          git tag v${{ env.PACKAGE_VERSION }}
+          git push --tags
+
+      - name: Release Electron App
+        uses: softprops/action-gh-release@v2
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.PACKAGE_VERSION }}
+          files: out/make/squirrel.windows/x64/
           prerelease: ${{ github.ref_name != 'master' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Create Release
-      #   id: create-release
-      #   uses: actions/create-release@v1
-      #   if: ${{ github.ref_type == 'tag' }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
-      #     TAG_NAME: ${{ github.ref_name }}
-      #   with:
-      #     tag_name: ${{ env.TAG_NAME }}
-      #     release_name: Release ${{ env.TAG_NAME }}
-      #     prerelease: true
-      #     body: 'some test body'
-
-      # - name: Upload Release
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create-release.outputs.upload_url }}
-      #     asset_path: 'app/out/make/squirrel.windows/x64/some-ts-electron-app-1.0.0 Setup.exe'
-      #     asset_name: 'some-ts-electron-app-1.0.0 Setup.exe'
-      #     asset_content_type: application/octet-stream
 
       # - name: Publish Release
       #   uses: eregon/publish-release@v1
