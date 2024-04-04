@@ -42,7 +42,7 @@ jobs:
         shell: pwsh
         run: |
           git tag -f v${{ env.PACKAGE_VERSION }}
-          git push --tags
+          git push --tags --force
 
       - name: Setup Node, NPM and Yarn
         uses: actions/setup-node@v4
