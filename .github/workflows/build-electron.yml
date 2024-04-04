@@ -7,11 +7,11 @@ on:
       - stage
       - master
 
-  pull_request:
-    branches:
-      - develop
-      - stage
-      - master
+  # pull_request:
+  #   branches:
+  #     - develop
+  #     - stage
+  #     - master
 
   workflow_dispatch:
 
@@ -26,7 +26,7 @@ jobs:
   make:
     name: Make Electron App
     runs-on: windows-latest
-    environment: ${{ github.ref_name == 'master' && 'production' || github.ref_name == 'stage' && 'staging' || 'development' }}
+    # environment: ${{ github.ref_name == 'master' && 'production' || github.ref_name == 'stage' && 'staging' || 'development' }}
 
     steps:
       - name: Check out git repository
