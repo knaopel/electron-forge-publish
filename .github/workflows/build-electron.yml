@@ -80,7 +80,7 @@ jobs:
           RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
         with:
           tag_name: v0.0.9
-          release_name: Release ${{ github.ref }}
+          release_name: Release v0.0.9
           prerelease: true
           body: 'some test'
 
