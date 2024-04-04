@@ -54,30 +54,34 @@ jobs:
           cmd: make
           dir: app
 
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          prerelease: ${{ github.ref_name != 'master' }}
+      - run: |
+          ls -lia app/out
+          ls -lia app/out/make
 
-      - name: Upload Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: 'app/out/make/squirrel.windows/x64/some-ts-electron-app-1.0.0 Setup.exe'
-          asset_name: 'some-ts-electron-app-1.0.0 Setup.exe'
-          asset_content_type: application/octet-stream
+      # - name: Create Release
+      #   id: create-release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     prerelease: ${{ github.ref_name != 'master' }}
 
-      - name: Publish Release
-        uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.create-release.outputs.id }}
+      # - name: Upload Release
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create-release.outputs.upload_url }}
+      #     asset_path: 'app/out/make/squirrel.windows/x64/some-ts-electron-app-1.0.0 Setup.exe'
+      #     asset_name: 'some-ts-electron-app-1.0.0 Setup.exe'
+      #     asset_content_type: application/octet-stream
+
+      # - name: Publish Release
+      #   uses: eregon/publish-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     release_id: ${{ steps.create-release.outputs.id }}
       
