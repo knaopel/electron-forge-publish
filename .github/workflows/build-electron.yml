@@ -66,7 +66,8 @@ jobs:
         run: |
           echo $ENV:PACKAGE_NAME
           echo $ENV:RELEASE_BINARY
-          echo ${{ github.event_name }}
+          echo event_name ${{ github.event_name }}
+          echo ref_type ${{ github.ref_type }}
           ls app/out
           ls app/out/make
           ls app/out/make/squirrel.windows
@@ -84,7 +85,7 @@ jobs:
       # - name: Create Release
       #   id: create-release
       #   uses: actions/create-release@v1
-      #   if: ${{ github.event_name == 'push' }}
+      #   if: ${{ github.ref_type == 'tag' }}
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #     RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
