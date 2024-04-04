@@ -41,7 +41,7 @@ jobs:
       - name: Tag repo
         shell: pwsh
         run: |
-          git tag v${{ env.PACKAGE_VERSION }}
+          git tag -f v${{ env.PACKAGE_VERSION }}
           git push --tags
 
       - name: Setup Node, NPM and Yarn
