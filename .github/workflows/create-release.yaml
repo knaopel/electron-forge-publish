@@ -12,20 +12,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create Release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
-        id: create-release
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: latest
-          prerelease: true
-          title: Development build
-          files: |
-            app/src/index.*
-            app/src/*.ts
+      # - name: Create Release
+      #   uses: marvinpinto/action-automatic-releases@v1.2.1
+      #   id: create-release
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     automatic_release_tag: latest
+      #     prerelease: true
+      #     title: Development build
+      #     files: |
+      #       app/src/index.*
+      #       app/src/*.ts
 
-      - name: Reporter
-        shell: bash
-        run: |
-          echo automatic_releases_tag ${{ steps.create-release.outputs.automatic_releases_tag }}
-          echo upload_url ${{ steps.create-release.outputs.upload_url }}
+      # - name: Reporter
+      #   shell: bash
+      #   run: |
+      #     echo automatic_releases_tag ${{ steps.create-release.outputs.automatic_releases_tag }}
+      #     echo upload_url ${{ steps.create-release.outputs.upload_url }}
