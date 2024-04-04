@@ -66,6 +66,7 @@ jobs:
         run: |
           echo $ENV:PACKAGE_NAME
           echo $ENV:RELEASE_BINARY
+          echo ${{ github.event_name }}
           ls app/out
           ls app/out/make
           ls app/out/make/squirrel.windows
