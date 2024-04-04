@@ -54,11 +54,19 @@ jobs:
           cmd: make
           dir: app
 
+      - name: Read package.json file
+        uses: rexdefuror/read-package-json@v1.0.5
+        with:
+          path: app
+
       - name: Run tests
         shell: pwsh
         run: |
+          echo $ENV:PACKAGE_NAME
           ls app/out
           ls app/out/make
+          ls app/out/make/squirrel.windows
+          ls app/out/make/squirrel.windows/x64
 
       # - name: Create Release
       #   id: create-release
