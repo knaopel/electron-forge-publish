@@ -98,18 +98,28 @@ jobs:
       - name: Show contents of download
         run: ls -R
 
-       # - name: Create Release
-      #   id: create-release
-      #   uses: actions/create-release@v1
-      #   if: ${{ github.ref_type == 'tag' }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
-      #   with:
-      #     tag_name: v0.0.9
-      #     release_name: Release v0.0.9
-      #     prerelease: true
-      #     body: 'some test'
+      - name: Read package.json file
+        uses: rexdefuror/read-package-json@v1.0.5
+
+      - name: Show package values
+        run: |
+          echo PACKAGE_NAME=${{ env.PACKAGE_NAME }}
+          echo PACKAGE_VERSION=${{ env.PACKAGE_VERSION }}
+          echo PACKAGE_PRODUCTNAME=${{ env.PACKAGE_PRODUCTNAME }}
+
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        if: ${{ github.ref_type == 'tag' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BINARY: '${{ env.PACKAGE_NAME }}-${{env.PACKAGE_VERSION}} Setup.exe'
+          TAG_NAME: ${{ github.ref_name }}
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: Release ${{ env.TAG_NAME }}
+          prerelease: true
+          body: 'some test body'
 
       # - name: Upload Release
       #   uses: actions/upload-release-asset@v1
