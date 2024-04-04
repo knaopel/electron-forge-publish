@@ -54,9 +54,11 @@ jobs:
           cmd: make
           dir: app
 
-      - run: |
-          ls -lia app/out
-          ls -lia app/out/make
+      - name: Run tests
+        shell: pwsh
+        run: |
+          ls app/out
+          ls app/out/make
 
       # - name: Create Release
       #   id: create-release
