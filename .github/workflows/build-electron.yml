@@ -123,7 +123,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: out/make/squirrel.windows/x64/
+          files: out/make/squirrel.windows/x64/*
           tag_name: v${{ env.PACKAGE_VERSION }}
           name: Release v${{ env.PACKAGE_VERSION }}
           prerelease: ${{ github.ref_name != 'master' }}
